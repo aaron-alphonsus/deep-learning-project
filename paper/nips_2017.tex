@@ -12,7 +12,7 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 
-\title{Formatting instructions for NIPS 2017}
+\title{MNIST Classification with Deep Convolutional Neural Networks}
 
 \author{
   Aaron G.~Alphonsus \\
@@ -27,14 +27,73 @@
 
 \maketitle
 
+% Here's an 81 char comment:
+%0123456789012345678901234567890123456789012345678901234567890123456789012345678X
+
+% 4-8 sentences
 \begin{abstract}
-  The abstract paragraph should be indented \nicefrac{1}{2}~inch
-  (3~picas) on both the left- and right-hand margins. Use 10~point
-  type, with a vertical spacing (leading) of 11~points.  The word
-  \textbf{Abstract} must be centered, bold, and in point size 12. Two
-  line spaces precede the abstract. The abstract must be limited to
-  one paragraph.
+Deep Neural Networks have regularly achieved state-of-the-art results especially 
+in the field of image recognition. AlexNet in 2012, was one such network which achieved a near 50\% reduction in the error rate of the 
+previous state-of-the-art. In this project we have utilized some of the core 
+architectural elements of AlexNet and used it to classify the MNIST dataset. 
+Using TensorFlow, we were able to achieve a near state-of-the-art result of 99.2\% accuracy. \textbf{NEED MORE?}
 \end{abstract}
+
+
+% Less than 20% (1.2 pages) Don't exceed 25% (1.5 pages)
+\section{Introduction}
+
+The objective of this project was to pick a framework and dataset, and get 
+a deep neural network trained and its performance tested. We took a few stabs at 
+this with different frameworks and datasets and realized there was a steep 
+learning curve to it. As this was our first time doing a machine learning 
+project we decided to narrow the scope of the project classifying the 
+introductory-level MNIST \cite{mnist} dataset using the popular TensorFlow framework.  
+
+In Dr. McGough's lectures on convolutional networks \cite{convnets}, we were introduced to the history of the convolutional neural network and how they exploded on the scene. It was here that we saw the architectural features of AlexNet and learned how influential it was to the field at the time. 
+
+The paper by Krizhevsky proposed using a Deep Convolutional Neural Network for the task of image classification. The dataset that they used was the ImageNet dataset \cite{alexnet}. Looking at the results they obtained, we thought we would get some good results using it for a simple image dataset like MNIST. 
+
+We began by implementing a simple single-layer neural network using TensorFlow to get used to the platform \cite{tutorial}. This yielded a modest 92\% accuracy rate on the dataset. This isn't great for the MNIST dataset, but creating the network gave us an end-to-end solution and got us familiar with the concepts and syntax.
+
+% No specific limit. ~25% of paper 
+\section{Methods and Materials}
+
+\subsection{Dataset}
+
+The MNIST dataset is popularly used 
+
+\subsection{Network Architecture}
+
+% subsection framework?
+
+
+% Up to 50% of the paper (3 pages)
+\section{Results}
+
+
+% Conclusions and future work
+% No more than 20%. Can be less than 5%
+\section{Discussion}
+
+In working on this project we used TensorFlow to train a deep network and were able to get respectable results on a popular dataset. We looked at the influential AlexNet architecture and implemented several features of its network architecture including ReLU neurons, successive convolution and pooling layers, and a densely connected layer at the end. 
+
+For future work on improving results with this model, we would like to look at some commonly-used data augmentation techniques such as random rotation, shear, and shift. This was a technique used by Krizhevsky as a method of increasing the robustness of their model. 
+
+Working on this project also served as a good introduction both in understanding the architecture of a deep convolutional network and getting familiar with the TensorFlow framework. We followed along with an introductory TensorFlow tutorial to get introduced to these new concepts as well as the low-level APIs.
+
+The next step in continuing to develop our understanding of deep learning would 
+be to try to incorporate some real-time visualization tools. Some exciting 
+tools we have seen being used to visualize data during the training process are TensorBoard and matplotlib. 
+
+\bibliographystyle{IEEEtran}
+\bibliography{sources}
+
+
+
+\newpage
+
+
 
 \section{Submission of papers to NIPS 2017}
 
