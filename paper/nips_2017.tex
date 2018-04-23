@@ -13,6 +13,7 @@
 \usepackage{microtype}      % microtypography
 \usepackage{graphicx}		% images
 
+
 \graphicspath{{images/}}
 
 \title{MNIST Classification with Deep Convolutional Neural Networks}
@@ -35,8 +36,7 @@
 
 % 4-8 sentences
 \begin{abstract}
-Deep Neural Networks have regularly achieved state-of-the-art results especially 
-in the field of image recognition. AlexNet in 2012, was one such network which achieved a near 50\% reduction in the error rate of the previous state-of-the-art. In this project we have utilized some of the core architectural elements of AlexNet and used it to classify the MNIST dataset. Using TensorFlow, we were able to achieve a near state-of-the-art result of 99.2\% accuracy. \textbf{NEED MORE?}
+	Deep Neural Networks have regularly achieved state-of-the-art results especially in the field of image classification. AlexNet in 2012, was one such groundbreaking network which achieved a near 50\% reduction in the error rate of the previous state-of-the-art model. In this project, we have implemented some of the core architectural elements of AlexNet using the TensorFlow framework. We picked the MNIST dataset and created a deep convolutional neural network to classify it. With our model, we were able to match some of the best models from the last 10 years and achieve a near state-of-the-art result of 99.2\% test accuracy. Our next steps include implementing batch normalization to improve our model, and utilizing real-time data visualization techniques to better understand the dataset and training process. 
 \end{abstract}
 
 
@@ -53,12 +53,13 @@ introductory-level MNIST \cite{mnist} dataset using the popular TensorFlow frame
 In Dr. McGough's lectures on convolutional networks \cite{convnets}, we were introduced to the history of the convolutional neural network and how they exploded on the scene. It was here that we saw the architectural features of AlexNet and learned how influential it was to the field at the time. The network from the original paper can be seen in figure \ref{fig:alexnet}. Note that the computation is divided into two pipelines showing the authors' use of 2 GPUs in training their network.
 
 \begin{figure}[h]
+	\centering
 	\includegraphics[width=\textwidth]{alexnet.png}
-    \caption{AlexNet neural network architecture}
+    \caption{AlexNet convolutional neural network architecture}
     \label{fig:alexnet}
 \end{figure}
 
-The paper by Krizhevsky proposed using a Deep Convolutional Neural Network for the task of image classification. The dataset that they used was the ImageNet dataset \cite{alexnet}. Looking at the results they obtained, we thought we would get some good results using it for a simple image dataset like MNIST. 
+The paper by Alex Krizhevsky proposed using a Deep Convolutional Neural Network for the task of image classification. The dataset that they used was the ImageNet dataset \cite{alexnet}. Looking at the results they obtained, we thought we could use the features of their network and get some good results for a simple image dataset like MNIST. 
 
 We began by implementing a simple single-layer neural network using TensorFlow to get used to the platform \cite{tutorial}. This yielded a modest 92\% accuracy rate on the dataset. This is not great for the MNIST dataset, but creating the network did give us an end-to-end solution and it also got us familiar with the concepts and syntax.  
 
@@ -69,13 +70,19 @@ After we had the deep network implemented, we tested a few things out like diffe
 % No specific limit. ~25% of paper 
 \section{Methods and Materials}
 
-Intro paragraph here providing an overview of the subsections
+\subsection{Initial Choices}
 
-\subsection{The Dataset}
+In tackling this project we had a few important decisions to make right up front. These were mainly picking a dataset to classify, and picking the framework. With not a lot of background information to make that decision, we probably picked something a little out of reach that we needed to work up to. After a lot of time spent spinning our wheels trying harder datasets, we decided to go simple and pick TensorFlow and MNIST. 
+
+\subsubsection{The Framework}
+
+Choosing a framework when you are a machine learning beginner is a little daunting. There are a lot to choose from and a lot of people batting for each one. We decided to go with TensorFlow because of its popularity and flexibility. We guessed that its popularity would mean better documentation, tutorials, and help along the way. Also, we figured that it is the framework that we will most likely need to use again in our career, be it academia or industry. With that said, there are probably easier ones to get started with, especially those built on TensorFlow that advertise rapid prototyping such as Keras. 
+
+\subsubsection{The Dataset}
 
 The MNIST dataset is popularly referred to as a "sanity check" dataset. This is because it is a relatively small dataset with not many categories. You can test out your new architecture quickly with it before turning it loose on your bigger datasets. This also means that it is a popular dataset among machine learning beginners. Having been unsuccessful getting a more complex dataset working, we decided to target MNIST in our project.
 
-MNIST is a computer vision dataset. Each example is a gray-scale 28x28 pixel image and contains a handwritten digit from 0 to 9. Each digit has been centered in the 28x28 image. An example of the handwritten digits contained in the MNIST dataset can be seen in figure \ref{fig:mnist}. The dataset has a training set of 60,000 examples and a test set of 10,000 examples. Since each image is a 0-9 digit, it is 10 category dataset.
+MNIST is a computer vision dataset. Each example is a gray-scale 28x28 pixel image and contains a handwritten digit from 0 to 9. Each digit has been centered in the 28x28 image. An example of the handwritten digits contained in the MNIST dataset can be seen in figure \ref{fig:mnist}. The dataset has a training set of 60,000 examples and a test set of 10,000 examples. Since each image is a 0-9 digit, it is a 10 category dataset.
 
 \begin{figure}[h]
 	\centering
@@ -89,27 +96,56 @@ MNIST is a computer vision dataset. Each example is a gray-scale 28x28 pixel ima
 
 \subsection{Network Architecture}
 
-% Add details and network graph about first attempt here?
+In our first attempt we built a softmax regression model with a single linear layer. Assuming our input image vector to be $x$, the weight matrix to be $W$, and the bias vector to be $b$, our regression equation is as follows:
+\[y = x.W + b\]
+where $y$ is the model's prediction and the '$x.W$' operation is a matrix multiplication. The architecture for this model can be seen in figure \ref{fig:mnist-single-architecture}
 
-As mentioned earlier, our network architecture uses a lot of elements from AlexNet, as do a lot of neural networks that have come after it. AlexNet contains 60 million parameters and 650,000 neurons. It has 5 convolutional layers, 3 of which are followed by max-pooling, 3 fully connected layers, with a final 1000-way softmax. Looking at the features from AlexNet, we implemented a neural network with the following features in its network architecture:
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\textwidth]{mnist-single-architecture.png}
+    \caption{Network architecture of the single-layer neural net}
+    \label{fig:mnist-single-architecture}
+\end{figure}
+
+As mentioned earlier, our network architecture uses a lot of elements from AlexNet, as do a lot of neural networks that have come after it. AlexNet contains 60 million parameters and 650,000 neurons. It has 5 convolutional layers (3 of which are followed by max-pooling), 3 fully connected layers, and a final 1000-way softmax. Looking at the features from AlexNet, we implemented a neural network with the following features in its network architecture:
 \begin{itemize}
 	\item ReLU for the activation functions.
     \item 2 convolution layers, each followed by max pooling.
     \item A final densely-connected layer.
-    \item Linear 
+    \item A single linear readout layer 
 \end{itemize}
-The architecture for this network can be seen in figure \textbf{XYZ}
+The architecture for this network can be seen in figure \ref{fig:mnist-deepcnn-architecture}
 
-\subsubsection{Variables}
-\subsubsection{Convolution and Pooling}
-\subsubsection{Densely Connected Layer}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{mnist-deepcnn-architecture.png}
+    \caption{Network architecture of the deep convolutional neural net}
+    \label{fig:mnist-deepcnn-architecture}
+\end{figure}
 
-\subsection{Other Elements of the Model}
+Building the model in TensorFlow was not very involved once we got the hang of the syntax. It was the theory behind the model that took the most time to understand. This was helped along towards the end of our project with a few lectures in class covering theory and some code for convolutional neural nets. 
 
-The dropout regularization method to reduce over-fitting.
-Trying out different gradient descent alphas (Adam optimizer)
+Our input variable contains a 2D tensor of floating point numbers where the first dimension is the variable batch size and the second is the linearized 28x28 pixel image. The target output class variable is a 2D tensor where each row is a one-hot 10-dimensional vector and it indicates the digit class (0-9) that the MNIST image belongs to.
+
+% \subsection{The Method}
+
+% Our script begins by loading the MNIST dataset into a lightweight class that stores the training, validation, and testing sets as NumPy arrays. Our input variable contains a vectorized 28x28 pixel MNIST image. The target output class variable is a 2D tensor where each row is a one-hot 10-dimensional vector and it indicates the digit class (0-9) that the MNIST image belongs to.
+
+%\subsection{Other Elements of the Model}
+
+\subsection{Optimizations}
+
+After we implemented the network using TensorFlow, we turned our attention to the task of hyperparameter tuning and optimization of the model. TensorFlow provides a number of built-in options to tweak your model and this is what we experimented with. We also read up on techniques used to improve a deep convolutional neural network such as dropout regularization which is used to stop neural networks from overfitting \cite{srivastava2014dropout}.
+
+The model we emulated included dropout but it came with a footnote explaining that the technique wasn't as important as it is to large neural networks. The network we trained isn't quite on the scale of some of the models out there where overfitting is a significant problem. We experimented with leaving out the dropout regularization method but as it turns out, we do have some over-fitting even with this model. Keeping dropout in was essential to maintaining those valuable tenths decimal places in our model's accuracy rating.
+
+The next thing we tried was the different gradient descent optimizers - something that TensorFlow provides a lot of built-in options for. Our model made use of the Adam optimizer, which we had heard of in class, and one that Ian Goodfellow, the author of our textbook recommends \cite{goodfellow2016nips}. We tried a couple of different optimizers including Adagrad and the default GradientDescentOptimizer along with varying the learning rate initialization value for all the optimizers. Seeing marginal changes in accuracy, we decided to move on to something else.
 
 \subsection{Saving and Restoring}
+
+After taking a crack at optimizing our model with not too much to show for it, we decided to look at being able to save our trained model. We figured it would be a useful feature to be able to demonstrate the classification without the wait time of having to train the model. This was also motivated by the guest lecture from Dr. Hoover who demonstrated an MNIST classifier that had the weights of the model saved so that it could be restored quickly and used on the dataset.
+
+It turned out TensorFlow had a method that could do this, however it was not quite the same as saving and loading the individual variables used. While this meant the code to achieve the feature was simple in the end, figuring out exactly what needed to be done and testing it took some time. Having the smaller single-layer network was crucial here as we were able to quickly get the results on what we tried because of the low training time.
 
 % subsection framework?
 % Diagrams of the training
@@ -117,359 +153,74 @@ Trying out different gradient descent alphas (Adam optimizer)
 % Up to 50% of the paper (3 pages)
 \section{Results}
 
-Using our deep convolutional network, we were able to achieve respectable results on the MNIST dataset. Comparing it to past results, as recorded  the creator of the dataset Yann LeCun, our accuracy of 99.2\% puts us among the best, albeit somewhere near the lower middle of the pack. As expected, our single-layer model isn't good enough for this dataset when compared to the state-of-the-art.
+Our first attempt at the MNIST classification problem was with the single-layer neural net with the softmax activation function. Being quite small, this model trains relatively quickly and achieves a test accuracy of around 92\%. In figure \ref{fig:mnist-single} you can see the accuracy being plotted as the model is being trained.
 
-Convergence, cross entropy graphs for single and cnn
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{mnist-single.png}
+    \caption{Accuracy plot during the training of the single-layer neural net}
+    \label{fig:mnist-single}
+\end{figure}
 
-Comparison to published results
+In our next attempt, we implemented a deep convolutional neural network using features from some of the best models that have classified the dataset. This model takes considerably longer to train when compared to our first model and achieves an accuracy of 99.2\%. Figure \ref{fig:mnist-deepcnn} displays the accuracy plotted as the model is being trained.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.55\textwidth]{mnist-deepcnn.png}
+    \caption{Accuracy plot during the training of the deep convolutional neural net}
+    \label{fig:mnist-deepcnn}
+\end{figure}
+
+Using our deep convolutional network, we were able to achieve respectable results on the MNIST dataset. Comparing it to past results, as recorded by the creator of the dataset Yann LeCun, our accuracy of 99.2\% puts us amongst the best models, albeit somewhere near the lower end of the pack. As expected, our single-layer model's accuracy of 92\% isn't good enough for this dataset when compared to the state-of-the-art models. It does hold its own against other models of its type, but surely that's only because nobody is actually going to publish a model with that kind of accuracy in current times. Table \ref{table:results} gives a listing of a sampling of the top models of each type for the classification of MNIST.
+
+\begin{table}[h]
+	\caption{Sampling of MNIST results for similar models}
+	\centering
+	\begin{tabular}{llll}
+        \toprule
+        Classifier & Preprocessing & Accuracy (\%) & Year \\
+        \midrule
+        \multicolumn{3}{c}{\textbf{Linear Classifiers}} \\
+		\midrule
+        Linear classifier (1-layer NN) \cite{lecun-98} & None & 88.0 & 1998 \\
+        Linear classifier (1-layer NN) \cite{lecun-98} & Deskewing & 91.6 & 1998 \\
+        Pairwise linear classifier \cite{lecun-98} & Deskewing & 92.4 & 1998 \\
+        \midrule
+        \multicolumn{3}{c}{\textbf{Convolutional Nets}} \\
+		\midrule
+        Convolutional net LeNet-1 \cite{lecun-98} & Subsampling to 16x16 & 98.3 & 1998 \\
+        Large conv. net, random features \cite{ranzato-cvpr-07} & None & 99.11 & 2007 \\
+        Boosted LeNet-4 \cite{lecun-98} & None & 99.3 & 1998 \\
+        Large conv. net, unsup features  \cite{ranzato-cvpr-07} & None & 99.38 & 2007 \\
+        Large conv. net, unsup pretraining \cite{jarrett-iccv-09} & None & 99.47 & 2009 \\
+        Committee of 35 conv. net \cite{DBLP:journals/corr/abs-1202-2745} & Width normalization & 99.77 & 2012 \\
+		\bottomrule
+	\end{tabular}
+    \label{table:results}
+\end{table}
 
 % Conclusions and future work
 % No more than 20%. Can be less than 5%
 \section{Discussion}
 
-In working on this project we used TensorFlow to train a deep network and were able to get respectable results on a popular dataset. We looked at the influential AlexNet architecture and implemented several features of its network architecture including dropout, ReLU neurons, successive convolution and pooling layers, and a densely connected layer at the end. 
-
-For future work on improving results with this model, we would like to look at some commonly-used data augmentation techniques such as random rotation, shear, and shift. This was a technique used by Krizhevsky as a method of increasing the robustness of their model. 
-
-Working on this project also served as a good introduction both in understanding the architecture of a deep convolutional network and getting familiar with the TensorFlow framework. We followed along with an introductory TensorFlow tutorial to get introduced to these new concepts as well as the low-level APIs.
+Working on this project served as a good introduction both in understanding the architecture of a deep convolutional network, and getting familiar with the TensorFlow framework. We followed along with an introductory TensorFlow tutorial to get introduced to these new concepts as well as the low-level APIs of the framework.
 
 The next step in continuing to develop our understanding of deep learning would 
 be to try to incorporate some real-time visualization tools. Some exciting 
-tools we have seen being used to visualize data during the training process are TensorBoard and matplotlib. 
+tools we have seen being used to visualize data during the training process are TensorBoard and matplotlib. Figure \ref{fig:matplotlib} shows some of the useful plots matplotlib offers while training on the MNIST dataset.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{matplotlib.png}
+    \caption{Some useful data visualization tools offered by matplotlib}
+    \label{fig:matplotlib}
+\end{figure}
+
+In working on this project we used TensorFlow to train a deep network and were able to get respectable results on a popular dataset. We looked at the influential AlexNet architecture and implemented several features of its network architecture including dropout, ReLU neurons, successive convolution and pooling layers, and a densely connected layer at the end. 
+
+For future work on improving results with this model, we would like to look at some commonly-used data augmentation techniques such as random rotation, shear, and shift. This was a technique used by Krizhevsky as a method of increasing the robustness of their model. We would also like to implement batch normalization which is a technique the best MNIST classifier uses. 
 
 \bibliographystyle{IEEEtran}
 \bibliography{sources}
-
-
-
-\newpage
-% ******************************************************************************
-% *******************************NIPS stuff here********************************
-% ******************************************************************************
-
-
-
-\section{Submission of papers to NIPS 2017}
-
-NIPS requires electronic submissions.  The electronic submission site
-is
-\begin{center}
-  \url{https://cmt.research.microsoft.com/NIPS2017/}
-\end{center}
-
-Please read carefully the instructions below and follow them
-faithfully.
-
-\subsection{Style}
-
-Papers to be submitted to NIPS 2017 must be prepared according to the
-instructions presented here. Papers may only be up to eight pages
-long, including figures. This does not include acknowledgments and 
-cited references which are allowed on subsequent pages.
-Papers that exceed these limits will not be reviewed, or in any
-other way considered for presentation at the conference.
-
-The margins in 2017 are the same as since 2007, which allow for
-$\sim$$15\%$ more words in the paper compared to earlier years.
-
-Authors are required to use the NIPS \LaTeX{} style files obtainable
-at the NIPS website as indicated below. Please make sure you use the
-current files and not previous versions. Tweaking the style files may
-be grounds for rejection.
-
-\subsection{Retrieval of style files}
-
-The style files for NIPS and other conference information are
-available on the World Wide Web at
-\begin{center}
-  \url{http://www.nips.cc/}
-\end{center}
-The file \verb+nips_2017.pdf+ contains these instructions and
-illustrates the various formatting requirements your NIPS paper must
-satisfy.
-
-The only supported style file for NIPS 2017 is \verb+nips_2017.sty+,
-rewritten for \LaTeXe{}.  \textbf{Previous style files for \LaTeX{}
-  2.09, Microsoft Word, and RTF are no longer supported!}
-
-The new \LaTeX{} style file contains two optional arguments:
-\verb+final+, which creates a camera-ready copy, and \verb+nonatbib+,
-which will not load the \verb+natbib+ package for you in case of
-package clash.
-
-At submission time, please omit the \verb+final+ option. This will
-anonymize your submission and add line numbers to aid review.  Please
-do \emph{not} refer to these line numbers in your paper as they will
-be removed during generation of camera-ready copies.
-
-The file \verb+nips_2017.tex+ may be used as a ``shell'' for writing
-your paper. All you have to do is replace the author, title, abstract,
-and text of the paper with your own.
-
-The formatting instructions contained in these style files are
-summarized in Sections \ref{gen_inst}, \ref{headings}, and
-\ref{others} below.
-
-\section{General formatting instructions}
-\label{gen_inst}
-
-The text must be confined within a rectangle 5.5~inches (33~picas)
-wide and 9~inches (54~picas) long. The left margin is 1.5~inch
-(9~picas).  Use 10~point type with a vertical spacing (leading) of
-11~points.  Times New Roman is the preferred typeface throughout, and
-will be selected for you by default.  Paragraphs are separated by
-\nicefrac{1}{2}~line space (5.5 points), with no indentation.
-
-The paper title should be 17~point, initial caps/lower case, bold,
-centered between two horizontal rules. The top rule should be 4~points
-thick and the bottom rule should be 1~point thick. Allow
-\nicefrac{1}{4}~inch space above and below the title to rules. All
-pages should start at 1~inch (6~picas) from the top of the page.
-
-For the final version, authors' names are set in boldface, and each
-name is centered above the corresponding address. The lead author's
-name is to be listed first (left-most), and the co-authors' names (if
-different address) are set to follow. If there is only one co-author,
-list both author and co-author side by side.
-
-Please pay special attention to the instructions in Section \ref{others}
-regarding figures, tables, acknowledgments, and references.
-
-\section{Headings: first level}
-\label{headings}
-
-All headings should be lower case (except for first word and proper
-nouns), flush left, and bold.
-
-First-level headings should be in 12-point type.
-
-\subsection{Headings: second level}
-
-Second-level headings should be in 10-point type.
-
-\subsubsection{Headings: third level}
-
-Third-level headings should be in 10-point type.
-
-\paragraph{Paragraphs}
-
-There is also a \verb+\paragraph+ command available, which sets the
-heading in bold, flush left, and inline with the text, with the
-heading followed by 1\,em of space.
-
-\section{Citations, figures, tables, references}
-\label{others}
-
-These instructions apply to everyone.
-
-\subsection{Citations within the text}
-
-The \verb+natbib+ package will be loaded for you by default.
-Citations may be author/year or numeric, as long as you maintain
-internal consistency.  As to the format of the references themselves,
-any style is acceptable as long as it is used consistently.
-
-The documentation for \verb+natbib+ may be found at
-\begin{center}
-  \url{http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}
-\end{center}
-Of note is the command \verb+\citet+, which produces citations
-appropriate for use in inline text.  For example,
-\begin{verbatim}
-   \citet{hasselmo} investigated\dots
-\end{verbatim}
-produces
-\begin{quote}
-  Hasselmo, et al.\ (1995) investigated\dots
-\end{quote}
-
-If you wish to load the \verb+natbib+ package with options, you may
-add the following before loading the \verb+nips_2017+ package:
-\begin{verbatim}
-   \PassOptionsToPackage{options}{natbib}
-\end{verbatim}
-
-If \verb+natbib+ clashes with another package you load, you can add
-the optional argument \verb+nonatbib+ when loading the style file:
-\begin{verbatim}
-   \usepackage[nonatbib]{nips_2017}
-\end{verbatim}
-
-As submission is double blind, refer to your own published work in the
-third person. That is, use ``In the previous work of Jones et
-al.\ [4],'' not ``In our previous work [4].'' If you cite your other
-papers that are not widely available (e.g., a journal paper under
-review), use anonymous author names in the citation, e.g., an author
-of the form ``A.\ Anonymous.''
-
-\subsection{Footnotes}
-
-Footnotes should be used sparingly.  If you do require a footnote,
-indicate footnotes with a number\footnote{Sample of the first
-  footnote.} in the text. Place the footnotes at the bottom of the
-page on which they appear.  Precede the footnote with a horizontal
-rule of 2~inches (12~picas).
-
-Note that footnotes are properly typeset \emph{after} punctuation
-marks.\footnote{As in this example.}
-
-\subsection{Figures}
-
-All artwork must be neat, clean, and legible. Lines should be dark
-enough for purposes of reproduction. The figure number and caption
-always appear after the figure. Place one line space before the figure
-caption and one line space after the figure. The figure caption should
-be lower case (except for first word and proper nouns); figures are
-numbered consecutively.
-
-You may use color figures.  However, it is best for the figure
-captions and the paper body to be legible if the paper is printed in
-either black/white or in color.
-\begin{figure}[h]
-  \centering
-  \fbox{\rule[-.5cm]{0cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-  \caption{Sample figure caption.}
-\end{figure}
-
-\subsection{Tables}
-
-All tables must be centered, neat, clean and legible.  The table
-number and title always appear before the table.  See
-Table~\ref{sample-table}.
-
-Place one line space before the table title, one line space after the
-table title, and one line space after the table. The table title must
-be lower case (except for first word and proper nouns); tables are
-numbered consecutively.
-
-Note that publication-quality tables \emph{do not contain vertical
-  rules.} We strongly suggest the use of the \verb+booktabs+ package,
-which allows for typesetting high-quality, professional tables:
-\begin{center}
-  \url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-This package was used to typeset Table~\ref{sample-table}.
-
-\begin{table}[t]
-  \caption{Sample table title}
-  \label{sample-table}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \multicolumn{2}{c}{Part}                   \\
-    \cmidrule{1-2}
-    Name     & Description     & Size ($\mu$m) \\
-    \midrule
-    Dendrite & Input terminal  & $\sim$100     \\
-    Axon     & Output terminal & $\sim$10      \\
-    Soma     & Cell body       & up to $10^6$  \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\section{Final instructions}
-
-Do not change any aspects of the formatting parameters in the style
-files.  In particular, do not modify the width or length of the
-rectangle the text should fit into, and do not change font sizes
-(except perhaps in the \textbf{References} section; see below). Please
-note that pages should be numbered.
-
-\section{Preparing PDF files}
-
-Please prepare submission files with paper size ``US Letter,'' and
-not, for example, ``A4.''
-
-Fonts were the main cause of problems in the past years. Your PDF file
-must only contain Type 1 or Embedded TrueType fonts. Here are a few
-instructions to achieve this.
-
-\begin{itemize}
-
-\item You should directly generate PDF files using \verb+pdflatex+.
-
-\item You can check which fonts a PDF files uses.  In Acrobat Reader,
-  select the menu Files$>$Document Properties$>$Fonts and select Show
-  All Fonts. You can also use the program \verb+pdffonts+ which comes
-  with \verb+xpdf+ and is available out-of-the-box on most Linux
-  machines.
-
-\item The IEEE has recommendations for generating PDF files whose
-  fonts are also acceptable for NIPS. Please see
-  \url{http://www.emfield.org/icuwb2010/downloads/IEEE-PDF-SpecV32.pdf}
-
-\item \verb+xfig+ "patterned" shapes are implemented with bitmap
-  fonts.  Use "solid" shapes instead.
-
-\item The \verb+\bbold+ package almost always uses bitmap fonts.  You
-  should use the equivalent AMS Fonts:
-\begin{verbatim}
-   \usepackage{amsfonts}
-\end{verbatim}
-followed by, e.g., \verb+\mathbb{R}+, \verb+\mathbb{N}+, or
-\verb+\mathbb{C}+ for $\mathbb{R}$, $\mathbb{N}$ or $\mathbb{C}$.  You
-can also use the following workaround for reals, natural and complex:
-\begin{verbatim}
-   \newcommand{\RR}{I\!\!R} %real numbers
-   \newcommand{\Nat}{I\!\!N} %natural numbers
-   \newcommand{\CC}{I\!\!\!\!C} %complex numbers
-\end{verbatim}
-Note that \verb+amsfonts+ is automatically loaded by the
-\verb+amssymb+ package.
-
-\end{itemize}
-
-If your file contains type 3 fonts or non embedded TrueType fonts, we
-will ask you to fix it.
-
-\subsection{Margins in \LaTeX{}}
-
-Most of the margin problems come from figures positioned by hand using
-\verb+\special+ or other commands. We suggest using the command
-\verb+\includegraphics+ from the \verb+graphicx+ package. Always
-specify the figure width as a multiple of the line width as in the
-example below:
-\begin{verbatim}
-   \usepackage[pdftex]{graphicx} ...
-   \includegraphics[width=0.8\linewidth]{myfile.pdf}
-\end{verbatim}
-See Section 4.4 in the graphics bundle documentation
-(\url{http://mirrors.ctan.org/macros/latex/required/graphics/grfguide.pdf})
-
-A number of width problems arise when \LaTeX{} cannot properly
-hyphenate a line. Please give LaTeX hyphenation hints using the
-\verb+\-+ command when necessary.
-
-\subsubsection*{Acknowledgments}
-
-Use unnumbered third level headings for the acknowledgments. All
-acknowledgments go at the end of the paper. Do not include
-acknowledgments in the anonymized submission, only in the final paper.
-
-\section*{References}
-
-References follow the acknowledgments. Use unnumbered first-level
-heading for the references. Any choice of citation style is acceptable
-as long as you are consistent. It is permissible to reduce the font
-size to \verb+small+ (9 point) when listing the references. {\bf
-  Remember that you can go over 8 pages as long as the subsequent ones contain
-  \emph{only} cited references.}
-\medskip
-
-\small
-
-[1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms
-for connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and
-T.K.\ Leen (eds.), {\it Advances in Neural Information Processing
-  Systems 7}, pp.\ 609--616. Cambridge, MA: MIT Press.
-
-[2] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS:
-  Exploring Realistic Neural Models with the GEneral NEural SImulation
-  System.}  New York: TELOS/Springer--Verlag.
-
-[3] Hasselmo, M.E., Schnell, E.\ \& Barkai, E.\ (1995) Dynamics of
-learning and recall at excitatory recurrent synapses and cholinergic
-modulation in rat hippocampal region CA3. {\it Journal of
-  Neuroscience} {\bf 15}(7):5249-5262.
 
 \end{document}
