@@ -25,5 +25,5 @@ automatically.
 The paper can be found in the ```paper/``` directory. The full filename is ```paper/nips_2017.pdf```.
 
 The ```.tex``` was compiled on guinness from the ```paper/``` directory using the sequence of commands 
-```pdflatex nips_2017.tex```, ```bibtex nips_2017.tex```, ```pdflatex nips_2017.tex```, ```pdflatex nips_2017.tex```
+```pdflatex nips_2017.tex```, ```bibtex nips_2017.aux```, ```pdflatex nips_2017.tex```, ```pdflatex nips_2017.tex```
 after which ```nips_2017.pdf``` had the complete output 
