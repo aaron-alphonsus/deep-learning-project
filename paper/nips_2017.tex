@@ -11,6 +11,9 @@
 \usepackage{amsfonts}       % blackboard math symbols
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
+\usepackage{graphicx}		% images
+
+\graphicspath{{images/}}
 
 \title{MNIST Classification with Deep Convolutional Neural Networks}
 
@@ -33,10 +36,7 @@
 % 4-8 sentences
 \begin{abstract}
 Deep Neural Networks have regularly achieved state-of-the-art results especially 
-in the field of image recognition. AlexNet in 2012, was one such network which achieved a near 50\% reduction in the error rate of the 
-previous state-of-the-art. In this project we have utilized some of the core 
-architectural elements of AlexNet and used it to classify the MNIST dataset. 
-Using TensorFlow, we were able to achieve a near state-of-the-art result of 99.2\% accuracy. \textbf{NEED MORE?}
+in the field of image recognition. AlexNet in 2012, was one such network which achieved a near 50\% reduction in the error rate of the previous state-of-the-art. In this project we have utilized some of the core architectural elements of AlexNet and used it to classify the MNIST dataset. Using TensorFlow, we were able to achieve a near state-of-the-art result of 99.2\% accuracy. \textbf{NEED MORE?}
 \end{abstract}
 
 
@@ -50,33 +50,84 @@ learning curve to it. As this was our first time doing a machine learning
 project we decided to narrow the scope of the project classifying the 
 introductory-level MNIST \cite{mnist} dataset using the popular TensorFlow framework.  
 
-In Dr. McGough's lectures on convolutional networks \cite{convnets}, we were introduced to the history of the convolutional neural network and how they exploded on the scene. It was here that we saw the architectural features of AlexNet and learned how influential it was to the field at the time. 
+In Dr. McGough's lectures on convolutional networks \cite{convnets}, we were introduced to the history of the convolutional neural network and how they exploded on the scene. It was here that we saw the architectural features of AlexNet and learned how influential it was to the field at the time. The network from the original paper can be seen in figure \ref{fig:alexnet}. Note that the computation is divided into two pipelines showing the authors' use of 2 GPUs in training their network.
+
+\begin{figure}[h]
+	\includegraphics[width=\textwidth]{alexnet.png}
+    \caption{AlexNet neural network architecture}
+    \label{fig:alexnet}
+\end{figure}
 
 The paper by Krizhevsky proposed using a Deep Convolutional Neural Network for the task of image classification. The dataset that they used was the ImageNet dataset \cite{alexnet}. Looking at the results they obtained, we thought we would get some good results using it for a simple image dataset like MNIST. 
 
-We began by implementing a simple single-layer neural network using TensorFlow to get used to the platform \cite{tutorial}. This yielded a modest 92\% accuracy rate on the dataset. This isn't great for the MNIST dataset, but creating the network gave us an end-to-end solution and got us familiar with the concepts and syntax.
+We began by implementing a simple single-layer neural network using TensorFlow to get used to the platform \cite{tutorial}. This yielded a modest 92\% accuracy rate on the dataset. This is not great for the MNIST dataset, but creating the network did give us an end-to-end solution and it also got us familiar with the concepts and syntax.  
+
+We then moved on to implementing a deep convolutional network making use of dropout, ReLU neurons, successive convolution and pooling layers, and a densely connected final layer \cite{tutorial-cnn}. These were all features that were also used in AlexNet \cite{alexnet-features}. This model was a lot more successful, achieving an accuracy of 99.2\%. 
+
+After we had the deep network implemented, we tested a few things out like different gradient descent optimizers, editing the network structure, and getting rid of dropout. We also wanted to work on being able to share our model without needing the user to spend time retraining it. Having the smaller model really helped here, as it meant we could test out edits without having to spend a lot of time waiting for the deep network to train. We weren't able to optimize the model further, but we were able to implement saving and restoring of the trained model.
 
 % No specific limit. ~25% of paper 
 \section{Methods and Materials}
 
-\subsection{Dataset}
+Intro paragraph here providing an overview of the subsections
 
-The MNIST dataset is popularly used 
+\subsection{The Dataset}
+
+The MNIST dataset is popularly referred to as a "sanity check" dataset. This is because it is a relatively small dataset with not many categories. You can test out your new architecture quickly with it before turning it loose on your bigger datasets. This also means that it is a popular dataset among machine learning beginners. Having been unsuccessful getting a more complex dataset working, we decided to target MNIST in our project.
+
+MNIST is a computer vision dataset. Each example is a gray-scale 28x28 pixel image and contains a handwritten digit from 0 to 9. Each digit has been centered in the 28x28 image. An example of the handwritten digits contained in the MNIST dataset can be seen in figure \ref{fig:mnist}. The dataset has a training set of 60,000 examples and a test set of 10,000 examples. Since each image is a 0-9 digit, it is 10 category dataset.
+
+\begin{figure}[h]
+	\centering
+    \fbox{\includegraphics[width=0.15\textwidth]{mnist5.png}}\quad
+    \fbox{\includegraphics[width=0.15\textwidth]{mnist0.png}}\quad
+    \fbox{\includegraphics[width=0.15\textwidth]{mnist4.png}}\quad
+    \fbox{\includegraphics[width=0.15\textwidth]{mnist1.png}}
+    \caption{Examples of the handwritten digits in MNIST}
+    \label{fig:mnist}
+\end{figure}
 
 \subsection{Network Architecture}
 
-% subsection framework?
+% Add details and network graph about first attempt here?
 
+As mentioned earlier, our network architecture uses a lot of elements from AlexNet, as do a lot of neural networks that have come after it. AlexNet contains 60 million parameters and 650,000 neurons. It has 5 convolutional layers, 3 of which are followed by max-pooling, 3 fully connected layers, with a final 1000-way softmax. Looking at the features from AlexNet, we implemented a neural network with the following features in its network architecture:
+\begin{itemize}
+	\item ReLU for the activation functions.
+    \item 2 convolution layers, each followed by max pooling.
+    \item A final densely-connected layer.
+    \item Linear 
+\end{itemize}
+The architecture for this network can be seen in figure \textbf{XYZ}
+
+\subsubsection{Variables}
+\subsubsection{Convolution and Pooling}
+\subsubsection{Densely Connected Layer}
+
+\subsection{Other Elements of the Model}
+
+The dropout regularization method to reduce over-fitting.
+Trying out different gradient descent alphas (Adam optimizer)
+
+\subsection{Saving and Restoring}
+
+% subsection framework?
+% Diagrams of the training
 
 % Up to 50% of the paper (3 pages)
 \section{Results}
 
+Using our deep convolutional network, we were able to achieve respectable results on the MNIST dataset. Comparing it to past results, as recorded  the creator of the dataset Yann LeCun, our accuracy of 99.2\% puts us among the best, albeit somewhere near the lower middle of the pack. As expected, our single-layer model isn't good enough for this dataset when compared to the state-of-the-art.
+
+Convergence, cross entropy graphs for single and cnn
+
+Comparison to published results
 
 % Conclusions and future work
 % No more than 20%. Can be less than 5%
 \section{Discussion}
 
-In working on this project we used TensorFlow to train a deep network and were able to get respectable results on a popular dataset. We looked at the influential AlexNet architecture and implemented several features of its network architecture including ReLU neurons, successive convolution and pooling layers, and a densely connected layer at the end. 
+In working on this project we used TensorFlow to train a deep network and were able to get respectable results on a popular dataset. We looked at the influential AlexNet architecture and implemented several features of its network architecture including dropout, ReLU neurons, successive convolution and pooling layers, and a densely connected layer at the end. 
 
 For future work on improving results with this model, we would like to look at some commonly-used data augmentation techniques such as random rotation, shear, and shift. This was a technique used by Krizhevsky as a method of increasing the robustness of their model. 
 
@@ -92,6 +143,9 @@ tools we have seen being used to visualize data during the training process are 
 
 
 \newpage
+% ******************************************************************************
+% *******************************NIPS stuff here********************************
+% ******************************************************************************
 
 
 

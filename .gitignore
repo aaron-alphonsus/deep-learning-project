@@ -1,7 +1,7 @@
-paper/*
+paper/nips*
 !paper/nips_2017.pdf
 !paper/nips_2017.tex
 !paper/nips_2017.sty
-!paper/sources.bib
 
 src/MNIST_data/*
+sandbox/MNIST_data/*
