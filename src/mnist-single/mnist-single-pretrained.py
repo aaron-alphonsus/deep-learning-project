@@ -27,7 +27,7 @@ saver = tf.train.Saver()
 # Initialize all variables (W and B here) before using them within session
 sess.run(tf.global_variables_initializer())
 
-# Implement regression model (output = input images * weights + bias)
+# Implement linear regression model (output = input images * weights + bias)
 y = tf.matmul(x, W) + b
 
 # restore the previously saved model. #notrainingrequired

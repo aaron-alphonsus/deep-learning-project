@@ -27,7 +27,7 @@ b = tf.Variable(tf.zeros([10]))
 # Initialize all variables (W and B here) before using them within session
 sess.run(tf.global_variables_initializer())
 
-# Implement regression model (output = input images * weights + bias)
+# Implement linear regression model (output = input images * weights + bias)
 y = tf.matmul(x, W) + b
 
 # Define the loss function (cross-entropy between target and softmax activation)
@@ -52,6 +52,7 @@ for _ in range(1000):
 
 # Checks whether the output y matches the target y_. Gives a list of booleans.
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
+
 # Convert booleans to floats and take the mean to get accuracy
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 print("Test accuracy %g%%" % (accuracy.eval(feed_dict={
